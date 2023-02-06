@@ -1,0 +1,253 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/check.yml"
+  pull_request:
+    branches:
+      - "main"
+    paths:
+      - ".github/workflows/check.yml"
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  check-nodejs-markmap-cli:
+    name: Check nodejs-markmap-cli
+    runs-on: ubuntu-latest
+    env:
+      FOLDER: nodejs-markmap-cli
+    outputs:
+      diff: ${{ steps.diff.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Update checksum
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          namcap: false
+          updpkgsums: true
+          flags: ""
+
+      - name: Git diff
+        id: diff
+        run: |
+          if git diff --quiet ${{ env.FOLDER }}/PKGBUILD; then
+            echo "::set-output name=changed::false"
+          else
+            echo "::set-output name=changed::true"
+          fi
+
+  update-nodejs-markmap-cli:
+    name: Update nodejs-markmap-cli
+    runs-on: ubuntu-latest
+    needs: check-nodejs-markmap-cli
+    if: needs.check-nodejs-markmap-cli.outputs.diff == 'true'
+    env:
+      FOLDER: nodejs-markmap-cli
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get-version
+        run: |
+          curl -s GET https://registry.npmjs.com/markmap-cli/ | jq --raw-output 'last(.versions[]).version'
+
+      - name: Update PKGBUILD
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          pkgver: ${{ steps.get-version.outputs.version }}
+          pkgrel: 1
+          srcinfo: true
+          flags: ""
+
+      - name: Commit files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.FOLDER }}/PKGBUILD ${{ env.FOLDER }}/.SRCINFO
+          git commit -m "chore(nodejs-markmap-cli): bump to ${{ steps.get-version.outputs.version }}"
+
+      - name: Push changes
+        if: github.event_name != 'pull_request'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger CI workflow
+        if: github.event_name != 'pull_request'
+        uses: benc-uk/workflow-dispatch@v121
+        with:
+          workflow: CI - nodejs-markmap-cli
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
+
+  check-doppler-cli-bin:
+    name: Check doppler-cli-bin
+    runs-on: ubuntu-latest
+    env:
+      FOLDER: doppler-cli-bin
+    outputs:
+      diff: ${{ steps.diff.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Update checksum
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          namcap: false
+          updpkgsums: true
+          flags: ""
+
+      - name: Git diff
+        id: diff
+        run: |
+          if git diff --quiet ${{ env.FOLDER }}/PKGBUILD; then
+            echo "::set-output name=changed::false"
+          else
+            echo "::set-output name=changed::true"
+          fi
+
+  update-doppler-cli-bin:
+    name: Update doppler-cli-bin
+    runs-on: ubuntu-latest
+    needs: check-doppler-cli-bin
+    if: needs.check-doppler-cli-bin.outputs.diff == 'true'
+    env:
+      FOLDER: doppler-cli-bin
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get-version
+        run: |
+          curl -s GET https://api.github.com/repos/DopplerHQ/cli/releases/latest | jq --raw-output '.tag_name'
+
+      - name: Update PKGBUILD
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          pkgver: ${{ steps.get-version.outputs.version }}
+          pkgrel: 1
+          srcinfo: true
+          flags: ""
+
+      - name: Commit files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.FOLDER }}/PKGBUILD ${{ env.FOLDER }}/.SRCINFO
+          git commit -m "chore(doppler-cli-bin): bump to ${{ steps.get-version.outputs.version }}"
+
+      - name: Push changes
+        if: github.event_name != 'pull_request'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger CI workflow
+        if: github.event_name != 'pull_request'
+        uses: benc-uk/workflow-dispatch@v121
+        with:
+          workflow: CI - doppler-cli-bin
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
+
+  check-ttf-unifont-csur:
+    name: Check ttf-unifont-csur
+    runs-on: ubuntu-latest
+    env:
+      FOLDER: ttf-unifont-csur
+    outputs:
+      diff: ${{ steps.diff.outputs.changed }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Update checksum
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          namcap: false
+          updpkgsums: true
+          flags: ""
+
+      - name: Git diff
+        id: diff
+        run: |
+          if git diff --quiet ${{ env.FOLDER }}/PKGBUILD; then
+            echo "::set-output name=changed::false"
+          else
+            echo "::set-output name=changed::true"
+          fi
+
+  update-ttf-unifont-csur:
+    name: Update ttf-unifont-csur
+    runs-on: ubuntu-latest
+    needs: check-ttf-unifont-csur
+    if: needs.check-ttf-unifont-csur.outputs.diff == 'true'
+    env:
+      FOLDER: ttf-unifont-csur
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get-version
+        run: |
+          curl -s https://unifoundry.com/pub/unifont/ | grep -Eo 'unifont-[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}' | tail -1 | sed s/unifont-//g
+
+      - name: Update PKGBUILD
+        uses: hapakaien/archlinux-package-action@v2
+        with:
+          path: "${{ env.FOLDER }}"
+          pkgver: ${{ steps.get-version.outputs.version }}
+          pkgrel: 1
+          srcinfo: true
+          flags: ""
+
+      - name: Commit files
+        if: github.event_name != 'pull_request'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ${{ env.FOLDER }}/PKGBUILD ${{ env.FOLDER }}/.SRCINFO
+          git commit -m "chore(ttf-unifont-csur): bump to ${{ steps.get-version.outputs.version }}"
+
+      - name: Push changes
+        if: github.event_name != 'pull_request'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Trigger CI workflow
+        if: github.event_name != 'pull_request'
+        uses: benc-uk/workflow-dispatch@v121
+        with:
+          workflow: CI - ttf-unifont-csur
+          token: ${{ secrets.PERSONAL_TOKEN }}
+          inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
