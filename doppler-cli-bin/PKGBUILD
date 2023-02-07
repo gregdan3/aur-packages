@@ -19,7 +19,7 @@ package() {
     local shrdir="$pkgdir/usr/share"
     local licdir="$shrdir/licenses/$pkgname"
     local docdir="$shrdir/doc/$pkgname"
-    install "$dataopts" "$licdir" "$_sourcedir/LICENSE"
-    install "$dataopts" "$docdir" "$_sourcedir/README.md"
-    install "$binopts" "$bindir" "$_sourcedir/doppler"
+    install $dataopts $licdir "$_sourcedir/LICENSE"
+    install $dataopts $docdir "$_sourcedir/README.md"
+    install $binopts $bindir "$_sourcedir/doppler"
 }
