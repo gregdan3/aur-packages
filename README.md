@@ -33,7 +33,17 @@ TrueType part of the GNU Unifont containing Michael Everson's ConScript Unicode 
 ## TODO
 
 - Templating. The only variables, once the `PKGBUILD` is configured and the `.SRCINFO` is generated, are the version fetch command and the name/dir of the package.
+  - Check YML
+    - Check: Key, Name, Folder
+    - Update: Key, Name, Needs, If, Folder, Commit Version command
+  - Workflow YMLs
+    - Name, Paths, Package
+  - README packages
+    - Shields
+    - Licenses?
 
 ## Thanks
 
 Big thanks to GitHub Actions, which has made it easy for me to maintain all these packages with automation.
+
+Thanks to [hapakaien](https://github.com/hapakaien/aur-packages/) for their prior work.

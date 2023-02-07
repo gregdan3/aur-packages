@@ -1,0 +1,7 @@
+---
+doppler-cli-bin:
+  get-version: curl -s GET https://api.github.com/repos/DopplerHQ/cli/releases/latest | jq --raw-output '.tag_name'
+ttf-unifont-csur:
+  get-version: curl -s https://unifoundry.com/pub/unifont/ | grep -Eo 'unifont-[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}' | tail -1 | sed s/unifont-//g
+nodejs-markmap-cli:
+  get-version: curl -s GET https://registry.npmjs.com/markmap-cli/ | jq --raw-output 'last(.versions[]).version'
