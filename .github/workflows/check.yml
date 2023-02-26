@@ -91,7 +91,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v121
         with:
           workflow: CI - nodejs-markmap-cli
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
 
   check-doppler-cli-bin:
@@ -170,7 +170,7 @@ jobs:
         uses: benc-uk/workflow-dispatch@v121
         with:
           workflow: CI - doppler-cli-bin
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
 
   check-ttf-unifont-csur:
@@ -249,5 +249,5 @@ jobs:
         uses: benc-uk/workflow-dispatch@v121
         with:
           workflow: CI - ttf-unifont-csur
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           inputs: '{ "version": "${{ steps.get-version.outputs.version }}" }'
